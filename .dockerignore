@@ -1,0 +1,12 @@
+.git
+.github
+**/node_modules
+**/dist
+**/.venv
+**/__pycache__
+**/*.pyc
+**/data
+**/*.db
+api/static
+Dockerfile
+README.md

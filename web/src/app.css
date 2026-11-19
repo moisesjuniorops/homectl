@@ -1,0 +1,84 @@
+body {
+  background:
+    radial-gradient(1200px 500px at 10% -10%, light-dark(rgba(12, 166, 120, 0.10), rgba(12, 166, 120, 0.12)), transparent 60%),
+    radial-gradient(900px 400px at 110% 10%, light-dark(rgba(121, 80, 242, 0.08), rgba(121, 80, 242, 0.10)), transparent 60%),
+    var(--mantine-color-body);
+  background-attachment: fixed;
+}
+
+.hero {
+  background: linear-gradient(135deg, var(--mantine-color-teal-6), var(--mantine-color-cyan-7));
+  color: white;
+  border: none !important;
+}
+
+.lift {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+.lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+.done {
+  opacity: 0.55;
+}
+.done .strike {
+  text-decoration: line-through;
+}
+
+/* Barra de abas inferior no celular */
+.bottom-nav {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 200;
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+  background: light-dark(rgba(255, 255, 255, 0.85), rgba(26, 27, 30, 0.85));
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--mantine-color-default-border);
+}
+.bottom-nav button {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 6px;
+  border-radius: 12px;
+  color: var(--mantine-color-dimmed);
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 76px;
+  padding: 4px 2px;
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bottom-nav button[data-active="true"] {
+  color: var(--mantine-color-teal-6);
+  background: light-dark(var(--mantine-color-teal-0), rgba(12, 166, 120, 0.15));
+}
+
+.fab {
+  position: fixed;
+  right: 18px;
+  bottom: calc(84px + env(safe-area-inset-bottom));
+  z-index: 199;
+}
+@media (min-width: 48em) {
+  .fab { display: none; }
+}
+@media (min-width: 48em) {
+  .bottom-nav { display: none; }
+}
+
+/* Evita que gráficos e textos longos empurrem a página para os lados */
+.mantine-AppShell-main { overflow-x: hidden; }
+.mantine-Card-root { min-width: 0; }
+.mantine-BarChart-root, .mantine-DonutChart-root { contain: inline-size; overflow: hidden; }
