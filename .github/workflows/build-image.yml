@@ -44,7 +44,7 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}   # PR só valida o build
+          push: ${{ github.event_name != 'pull_request' }}   # PR on check builds
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
@@ -57,4 +57,25 @@ jobs:
           image-ref: ${{ env.IMAGE }}:${{ steps.meta.outputs.version }}
           severity: CRITICAL,HIGH
           ignore-unfixed: true
-          exit-code: "0"   # "1" para bloquear o pipeline
+          exit-code: "0"   # "1" for blocking pipeline
+
+
+  # Required secret in the homectl repo: PLATFORM_REPO_TOKEN
+  #   fine-grained PAT → repository kubernetes-production → Contents: Read and write
+  bump:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: moisesjuniorops/kubernetes-production
+          token: ${{ secrets.PLATFORM_REPO_TOKEN }}
+      - name: Bump image tag
+        run: |
+          TAG="${GITHUB_SHA::7}"
+          yq -i ".image.tag = \"$TAG\"" apps/homectl/values-prod.yaml
+          git config user.name "homectl-ci"
+          git config user.email "homectl-ci@users.noreply.github.com"
+          git commit -am "chore(homectl): deploy $TAG" || echo "nothing to change"
+          git push      
