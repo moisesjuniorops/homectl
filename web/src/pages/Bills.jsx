@@ -1,5 +1,6 @@
 import { ActionIcon, Badge, Button, Card, Group, SimpleGrid, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconCheck, IconReceipt, IconRepeat, IconTrash } from "@tabler/icons-react";
+import dayjs from "dayjs";
 import { api, brl, daysUntil, fmtDate, useResource } from "../api.js";
 import { AddButton, EmptyState, LoadingList, PageHeader, confirmDelete } from "../components/ui.jsx";
 
@@ -34,6 +35,7 @@ export default function Bills() {
                 {b.recurring && <IconRepeat size={14} color="var(--mantine-color-dimmed)" />}
               </Group>
               <Text fz="xl" fw={800} lh={1.2}>{brl(b.amount)}</Text>
+              <Text size="xs" c="dimmed">vence {dayjs(b.due_date).format("DD/MM/YYYY")}</Text>
             </div>
           </Group>
           <ActionIcon variant="subtle" color="gray" onClick={() => confirmDelete(b.name, () => remove(b.id))}><IconTrash size={16} /></ActionIcon>

@@ -1,12 +1,14 @@
 import "@mantine/core/styles.css";
 import "@mantine/charts/styles.css";
 import "@mantine/notifications/styles.css";
+import "@mantine/dates/styles.css";
 import "./app.css";
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { MantineProvider, createTheme } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
+import { DatesProvider } from "@mantine/dates";
 import { Notifications } from "@mantine/notifications";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
@@ -34,10 +36,12 @@ const theme = createTheme({
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <MantineProvider theme={theme} defaultColorScheme="auto">
+      <DatesProvider settings={{ locale: "pt-br", firstDayOfWeek: 0 }}>
       <ModalsProvider labels={{ confirm: "Confirmar", cancel: "Cancelar" }}>
         <Notifications position="top-center" />
         <App />
       </ModalsProvider>
+      </DatesProvider>
     </MantineProvider>
   </StrictMode>,
 );

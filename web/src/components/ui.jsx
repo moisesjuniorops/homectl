@@ -5,6 +5,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
+import { DateInput } from "@mantine/dates";
 import { IconPlus } from "@tabler/icons-react";
 
 export function PageHeader({ icon: Icon, color = "teal", title, subtitle, action }) {
@@ -108,10 +109,18 @@ export function AddButton({ title, fields, onSubmit, color = "teal", label = "Ad
                 return mobile ? (
                   <NativeSelect {...common} data={f.data} value={form[f.name]} onChange={set(f.name)} />
                 ) : (
-                  <Select {...common} data={f.data} value={form[f.name]} onChange={set(f.name)} allowDeselect={false} comboboxProps={{ withinPortal: false }} />
+                  <Select {...common} data={f.data} value={form[f.name]} onChange={set(f.name)} allowDeselect={false} comboboxProps={{ withinPortal: true, zIndex: 1000, position: "bottom", middlewares: { flip: false, shift: true } }} maxDropdownHeight={220} />
                 );
               if (f.type === "switch")
                 return <Switch key={f.name} label={f.label} checked={form[f.name]} onChange={set(f.name)} />;
+              // Data: no desktop, DateInput sempre em DD/MM/AAAA (o <input type="date"> segue o idioma
+              // do navegador e, em inglês, vira MM/DD — 11/02 era lido como 2 de fevereiro).
+              // No celular fica o seletor nativo do sistema.
+              if (f.type === "date" && !mobile)
+                return (
+                  <DateInput {...common} value={form[f.name] || null} onChange={(v) => set(f.name)(v || "")}
+                    valueFormat="DD/MM/YYYY" locale="pt-br" clearable popoverProps={{ withinPortal: true, zIndex: 1000 }} />
+                );
               return <TextInput {...common} type={f.type || "text"} value={form[f.name]} onChange={set(f.name)} />;
             })}
             <Button type="submit" size="md" color={color} mt="sm">Salvar</Button>
