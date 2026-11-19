@@ -62,7 +62,13 @@ export function AddButton({ title, fields, onSubmit, color = "teal", label = "Ad
   const mobile = useMediaQuery("(max-width: 48em)");
   const empty = () => Object.fromEntries(fields.map((f) => [f.name, f.default ?? (f.type === "switch" ? false : "")]));
   const [form, setForm] = useState(empty);
-  const set = (name) => (v) => setForm((s) => ({ ...s, [name]: v?.currentTarget ? (v.currentTarget.type === "checkbox" ? v.currentTarget.checked : v.currentTarget.value) : v }));
+  // Lê o valor do evento AGORA: o React zera event.currentTarget depois do handler,
+  // e o updater do setState roda depois. Mantine (NumberInput/Select) já passa o valor puro.
+  const set = (name) => (v) => {
+    const t = v?.currentTarget ?? v?.target;
+    const value = t && typeof t === "object" && "value" in t ? (t.type === "checkbox" ? t.checked : t.value) : v;
+    setForm((s) => ({ ...s, [name]: value }));
+  };
 
   const submit = async (e) => {
     e.preventDefault();
